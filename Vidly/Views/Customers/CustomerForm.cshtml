@@ -1,0 +1,42 @@
+﻿@model Vidly.ViewModels.CustomerFormViewModel
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.title</h2>
+
+@*BeginForm: 當使用者按下儲存button後(submit)，將所有收集到的資料，導向CustomersController裡面的Create的ActionResult*@
+@using (Html.BeginForm("Save", "Customers"))
+{
+    @Html.ValidationSummary(true, "請修正以下錯誤")
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.Name)
+        @Html.TextBoxFor(m => m.Customer.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Customer.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.MembershipTypeId)
+        @Html.DropDownListFor(m => m.Customer.MembershipTypeId, new SelectList(Model.MembershipTypes, "Id", "Name"), "Select Membership Type", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Customer.MembershipTypeId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.Birthdate)
+        @Html.TextBoxFor(m => m.Customer.Birthdate, "{0:d MMM yyyy}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Customer.Birthdate)
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.Customer.IsSubscribedToNewsletter) subscribe to a newsletter?
+        </label>
+    </div>
+    @Html.HiddenFor(m => m.Customer.Id);
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button> @*頁面下方的"儲存"按鈕*@
+
+    @section scripts
+        {
+        @Scripts.Render("~/bundles/jqueryval")
+        }
+}
+
